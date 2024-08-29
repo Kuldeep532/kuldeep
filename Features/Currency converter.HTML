@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Currency Converter</h1>
+
+    <div>
+        <input type="number" id="amount" placeholder="Enter amount" />
+        <select id="fromCurrency">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="INR">INR</option>
+            <option value="GBP">GBP</option>
+            <option value="AUD">AUD</option>
+            <!-- Add more currencies as needed -->
+        </select>
+        <select id="toCurrency">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="INR">INR</option>
+            <option value="GBP">GBP</option>
+            <option value="AUD">AUD</option>
+            <!-- Add more currencies as needed -->
+        </select>
+        <button onclick="convertCurrency()">Convert</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        async function convertCurrency() {
+            const amount = document.getElementById('amount').value;
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+
+            if (!amount || isNaN(amount)) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            const apiKey = 'your-api-key-here'; // Replace with your API key
+            const url = `https://api.exchangerate-api.com/v4/latest/${fromCurrency}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const rate = data.rates[toCurrency];
+                const convertedAmount = (amount * rate).toFixed(2);
+
+                document.getElementById('result').textContent = 
+                    `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+            } catch (error) {
+                document.getElementById('result').textContent = 
+                    'Error fetching exchange rates. Please try again later.';
+            }
+        }
+    </script>
+
+</body>
+</html>
